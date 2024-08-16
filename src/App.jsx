@@ -1,34 +1,42 @@
 import {db} from "./firebaseConfig"
 import { useState,useEffect,useContext } from 'react'
 import { collection, getDocs } from 'firebase/firestore';
+
+//components
+import LogoutButton from './components/LogoutButton';
 import SummaryTable from './components/SummaryTable';
+
+//hooks
+import useFetchRegistros from "./hooks/useFetchRegistros";
 import useFilteredData from "./hooks/useFilteredData";
+
+
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import Login from './components/Login';
 
 function App() {
+  
   const { currentUser } = useContext(AuthContext);
-
 
   const [registros, setRegistros] = useState([]);
   const [startDate, setStartDate] = useState("2024-01-01");
   const [endDate, setEndDate] = useState("2024-12-30");
   const [selectedUser, setSelectedUser] = useState("");
 
-  useEffect(() => {
-    const fetchRegistros = async () => {
-      const registrosCollection = collection(db, 'registros');
-      const registrosSnapshot = await getDocs(registrosCollection);
-      const registrosList = registrosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setRegistros(registrosList);
-    };
+  // useEffect(() => {
+  //   const fetchRegistros = async () => {
+  //     const registrosCollection = collection(db, 'registros');
+  //     const registrosSnapshot = await getDocs(registrosCollection);
+  //     const registrosList = registrosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  //     setRegistros(registrosList);
+  //   };
 
-    fetchRegistros();
-  }, []);
+  //   fetchRegistros();
+  // }, []);
 
-  const filteredData = useFilteredData(registros, startDate, endDate, selectedUser);
+  const data = useFetchRegistros()
+  const filteredData = useFilteredData(data, startDate, endDate, selectedUser);
 
-  console.log(filteredData)
   const summary = {};
   filteredData.forEach(({ actividad, etapa, horas }) => {
     if (!summary[actividad]) {
@@ -55,6 +63,7 @@ function App() {
     <div>
       {currentUser ? (
         <div>
+        <LogoutButton />
         <h1>Resumen de horas por actividad</h1>
         <label>
           Fecha de Inicio:
