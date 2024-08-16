@@ -1,11 +1,9 @@
 import { useState,useEffect,useContext } from 'react'
 
 //components
-import LogoutButton from './components/LogoutButton';
 import SummaryTable from './components/SummaryTable';
 
 //hooks
-//import useFetchRegistros from "./hooks/useFetchRegistros";
 import useFilteredData from "./hooks/useFilteredData";
 import { useData } from './context/DataContext';
 
@@ -50,7 +48,7 @@ function Reportes() {
     <div>
       {currentUser ? (
         <div>
-        <LogoutButton />
+        
         <h1>Resumen de horas por actividad</h1>
         <label>
           Fecha de Inicio:
