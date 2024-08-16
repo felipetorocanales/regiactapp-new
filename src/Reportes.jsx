@@ -5,8 +5,9 @@ import LogoutButton from './components/LogoutButton';
 import SummaryTable from './components/SummaryTable';
 
 //hooks
-import useFetchRegistros from "./hooks/useFetchRegistros";
+//import useFetchRegistros from "./hooks/useFetchRegistros";
 import useFilteredData from "./hooks/useFilteredData";
+import { useData } from './context/DataContext';
 
 
 import { AuthProvider, AuthContext } from './context/AuthContext';
@@ -16,12 +17,11 @@ function Reportes() {
   
   const { currentUser } = useContext(AuthContext);
 
-  const [registros, setRegistros] = useState([]);
+  const {data} = useData();
   const [startDate, setStartDate] = useState("2024-01-01");
   const [endDate, setEndDate] = useState("2024-12-30");
   const [selectedUser, setSelectedUser] = useState("");
 
-  const data = useFetchRegistros()
   const filteredData = useFilteredData(data, startDate, endDate, selectedUser);
 
   const summary = {};
