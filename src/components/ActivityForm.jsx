@@ -1,42 +1,93 @@
-import React, { useState, useEffect } from 'react';
-//import Slider from 'react-slider'; // Import the slider component
+import './ActivityForm.css'
+
+import React, { useState ,useContext} from 'react';
 import { useData } from '../context/DataContext';
+import Slider from '@mui/material/Slider';
+import { db } from '../firebaseConfig'; // Adjust the path as necessary
+import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import {AuthContext} from '../context/AuthContext'
 
 const ActivityForm = () => {
   const {actividades} = useData()
-  
+  const { currentUser } = useContext(AuthContext);
   const [categoryOptions, setCategoryOptions] = useState(["General","Planificación","Ejecución","Comunicación"]);
+
   const [selectedActivity, setSelectedActivity] = useState('');
-  const [hours, setHours] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [date, setDate] = useState('');
-  const [sliderValue, setSliderValue] = useState([0, 1]); // Start and end positions
+  const [sliderValue, setSliderValue] = useState([9, 18]); // Default to 1 PM to 3 PM
+  const [error, setError] = useState('');
 
-  const handleIncrement = () => {
-    setHours(hours + 1);
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    setError('');
 
-  const handleDecrement = () => {
-    if (hours > 0) {
-      setHours(hours - 1);
+    // Validate the form fields
+    if (!date || !selectedActivity || !selectedCategory || !sliderValue) {
+      setError('Please fill in all fields.');
+      return;
+    }
+
+    try {
+      // Add a new document with a generated ID
+      const fechaString = `${date} ${sliderValue[0]}:00:00`
+      console.log(fechaString)
+      const fechaIni = new Date(`${date} ${sliderValue[0]}:00:00`)
+      const fechaFin = new Date(`${date} ${sliderValue[1]}:00:00`)
+      // await addDoc(collection(db, 'registros'), {
+      //   fechaIni,
+      //   fechaFin,
+      //   horas: countOfHours,
+      //   actividad: selectedActivity,
+      //   user: currentUser.email,
+      //   etapa: selectedCategory,
+      //   creado: Timestamp.now(),
+      //   modificado: Timestamp.now(),
+      // });
+      console.log(
+        fechaIni,
+        fechaFin,
+        countOfHours,
+        selectedActivity,
+        currentUser.email,
+        selectedCategory,
+        new Date(),
+        new Date(),
+      )
+
+      // Clear the form after submission
+      setDate('');
+      setSelectedActivity('');
+      setSelectedCategory('');
+      setSliderValue([9,18])
+      alert('Registro added successfully!');
+    } catch (err) {
+      console.error('Error adding document: ', err);
+      setError('Error adding document, please try again.');
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log({
-      selectedActivity,
-      hours,
-      selectedCategory,
-      date,
-      sliderValue,
-    });
-  };
+  // Define marks for the slider
+  const marks = Array.from({ length: 18 }, (_, index) => ({
+    value: index,
+    label: index < 12 ? `${index} AM` : `${index - 12} PM`,
+  }));
+
+  const countOfHours = sliderValue[0] <= 12 && sliderValue[1] >= 13 ? sliderValue[1] - sliderValue[0] -1 : sliderValue[1] - sliderValue[0]
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    <form onSubmit={handleSubmit} className="form-container">
+      <div className="form-group">
+        <label>Fecha:</label>
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          className="input-field"
+        />
+      </div>
+      <div className="form-group">
         <label>Nombre de Actividad:</label>
         <select
           value={selectedActivity}
@@ -50,58 +101,45 @@ const ActivityForm = () => {
           ))}
         </select>
       </div>
-
-      <div>
+      <div className="form-group">
         <label>Horas:</label>
-        <button type="button" onClick={handleDecrement}>-</button>
         <input
           type="number"
-          value={hours}
+          value={countOfHours}
           readOnly
+          className="input-field"
         />
-        <button type="button" onClick={handleIncrement}>+</button>
       </div>
-
-      <div>
+      <div className="form-group">
         <label>Categoría:</label>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
         >
           <option value="">Seleccione una categoría</option>
-          {categoryOptions.map((category,index) => (
+          {categoryOptions.map((category, index) => (
             <option key={index} value={category}>
               {category}
             </option>
           ))}
         </select>
       </div>
-
-      <div>
-        <label>Fecha:</label>
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
+      
+      <div className="form-group">
+        <label>Seleccionar Horario:</label>
+        <Slider
+          value={sliderValue}
+          onChange={(e, newValue) => {
+            setSliderValue(newValue);
+          }}
+          marks={marks}
+          min={9}
+          max={18}
+          valueLabelDisplay="auto"
         />
       </div>
-
-      <div>
-        <label>Seleccionar Horario (0 a 7):</label>
-        <input
-      type="range"
-      min={0}
-      max={7}
-      value={sliderValue}
-      onChange={(e) => setSliderValue([parseInt(e.target.value), parseInt(e.target.value) + 1])} // Example for start and end
-    />
-        <div>
-          <span>Inicio: {sliderValue[0]}</span>
-          <span>Fin: {sliderValue[1]}</span>
-        </div>
-      </div>
-
-      <button type="submit">Enviar</button>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <button type="submit" className="submit-button">Enviar</button>
     </form>
   );
 };

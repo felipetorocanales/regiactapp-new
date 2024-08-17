@@ -6,19 +6,20 @@ import RegistroDeHoras from './RegistroDeHoras'
 //contextos
 import {useContext } from 'react'
 import {useData} from './context/DataContext'
+import {AuthContext } from './context/AuthContext';
 //components
 import LogoutButton from './components/LogoutButton';
-import {AuthContext } from './context/AuthContext';
 import Login from './components/Login';
+import NavBar from './components/NavBar'
 
 const Inicio = () => <h2>Inicio</h2>;
-
 const Configuracion = () => <h2>Configuración</h2>;
 
 function App() {
   
   const { currentUser } = useContext(AuthContext);
   const {loading} = useData()
+
   return (
     <div>
       {currentUser ? (
@@ -26,22 +27,8 @@ function App() {
         <Router>
         <div>
         <LogoutButton />
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Inicio</Link>
-              </li>
-              <li>
-                <Link to="/reportes">Reportes</Link>
-              </li>
-              <li>
-                <Link to="/registro-de-horas">Registro de Horas</Link>
-              </li>
-              <li>
-                <Link to="/configuracion">Configuración</Link>
-              </li>
-            </ul>
-          </nav>
+        
+          <NavBar/>
   
           <Routes>
             <Route path="/" element={<Inicio />} />
