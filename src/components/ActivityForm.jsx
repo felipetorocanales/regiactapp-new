@@ -6,6 +6,7 @@ import Slider from '@mui/material/Slider';
 import { db } from '../firebaseConfig'; // Adjust the path as necessary
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import {AuthContext} from '../context/AuthContext'
+import { indexedDBLocalPersistence } from 'firebase/auth';
 
 const ActivityForm = () => {
   const {actividades} = useData()
@@ -20,6 +21,9 @@ const ActivityForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const fechaIni = `${date}T${sliderValue[0]}:00`
+    const fechaFin = `${date}T${sliderValue[1]}:00`
     // Handle form submission logic here
     setError('');
 
@@ -31,30 +35,16 @@ const ActivityForm = () => {
 
     try {
       // Add a new document with a generated ID
-      const fechaString = `${date} ${sliderValue[0]}:00:00`
-      console.log(fechaString)
-      const fechaIni = new Date(`${date} ${sliderValue[0]}:00:00`)
-      const fechaFin = new Date(`${date} ${sliderValue[1]}:00:00`)
-      // await addDoc(collection(db, 'registros'), {
-      //   fechaIni,
-      //   fechaFin,
-      //   horas: countOfHours,
-      //   actividad: selectedActivity,
-      //   user: currentUser.email,
-      //   etapa: selectedCategory,
-      //   creado: Timestamp.now(),
-      //   modificado: Timestamp.now(),
-      // });
-      console.log(
+      await addDoc(collection(db, 'registros'), {
         fechaIni,
         fechaFin,
-        countOfHours,
-        selectedActivity,
-        currentUser.email,
-        selectedCategory,
-        new Date(),
-        new Date(),
-      )
+        horas: countOfHours,
+        actividad: selectedActivity,
+        userEmail: currentUser.email,
+        etapa: selectedCategory,
+        creado: new Date(),
+        modificado: new Date(),
+      });
 
       // Clear the form after submission
       setDate('');
@@ -118,7 +108,7 @@ const ActivityForm = () => {
         >
           <option value="">Seleccione una categoría</option>
           {categoryOptions.map((category, index) => (
-            <option key={index} value={category}>
+            <option key={index} value={index}>
               {category}
             </option>
           ))}
