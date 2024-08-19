@@ -91,15 +91,6 @@ const ActivityForm = () => {
         </select>
       </div>
       <div className="form-group">
-        <label>Horas:</label>
-        <input
-          type="number"
-          value={countOfHours}
-          readOnly
-          className="input-field"
-        />
-      </div>
-      <div className="form-group">
         <label>Categoría:</label>
         <select
           value={selectedCategory}
@@ -126,6 +117,15 @@ const ActivityForm = () => {
           max={18}
           valueLabelDisplay="auto"
         />
+        <div className="form-group">
+          <label>Horas:</label>
+          <input
+            type="number"
+            value={countOfHours}
+            readOnly
+            className="input-field"
+          />
+        </div>
       </div>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <button type="submit" className="submit-button">Enviar</button>
