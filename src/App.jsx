@@ -18,7 +18,7 @@ const Configuracion = () => <h2>Configuración</h2>;
 function App() {
   
   const { currentUser } = useContext(AuthContext);
-  const {loading} = useData()
+  const { loading } = useData()
 
   return (
     <div>

@@ -1,6 +1,8 @@
+//components
 import ActivityForm from "./components/ActivityForm";
 
 const RegistroDeHoras = () => {
+
     return (
         <ActivityForm/>
     )

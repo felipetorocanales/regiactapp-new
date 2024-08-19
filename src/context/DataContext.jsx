@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {db} from "../firebaseConfig"
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, onSnapshot } from 'firebase/firestore';
 
    const DataContext = createContext();
 
    export const DataProvider = ({ children }) => {
      const [data, setData] = useState([]);
      const [actividades, setActividades] = useState([])
+     const [registros,setRegistros] = useState([])
 
      const [loading, setLoading] = useState(true); // General loading state
 
@@ -20,7 +21,7 @@ import { collection, getDocs } from 'firebase/firestore';
           const actividadesCollection = collection(db, 'actividades');
           const [registrosSnapshot,actividadesSnapshot] = await Promise.all([
             getDocs(registrosCollection),
-            getDocs(actividadesCollection)
+            getDocs(actividadesCollection),
           ])
           const registrosList = await registrosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           const actividadesList = await actividadesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -36,8 +37,21 @@ import { collection, getDocs } from 'firebase/firestore';
       fetchData();
      }, []);
 
+     useEffect(() => {
+      const unsubscribe = onSnapshot(collection(db, 'registros'), (snapshot) => {
+        const docs = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setRegistros(docs);
+      });
+  
+      // Cleanup subscription on unmount
+      return () => unsubscribe();
+    }, []);
+
      return (
-       <DataContext.Provider value={{ data , actividades,loading }}>
+       <DataContext.Provider value={{ data , actividades,loading,registros }}>
          {children}
        </DataContext.Provider>
      );

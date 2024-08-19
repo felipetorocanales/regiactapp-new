@@ -1,26 +1,20 @@
 import { useState,useEffect,useContext } from 'react'
-
 //components
 import SummaryTable from './components/SummaryTable';
-
 //hooks
 import useFilteredData from "./hooks/useFilteredData";
+
+//context
 import { useData } from './context/DataContext';
-
-
-import { AuthProvider, AuthContext } from './context/AuthContext';
-import Login from './components/Login';
 
 function Reportes() {
   
-  const { currentUser } = useContext(AuthContext);
-
-  const {data} = useData();
+  const {registros} = useData();
   const [startDate, setStartDate] = useState("2024-01-01");
   const [endDate, setEndDate] = useState("2024-12-30");
   const [selectedUser, setSelectedUser] = useState("");
 
-  const filteredData = useFilteredData(data, startDate, endDate, selectedUser);
+  const filteredData = useFilteredData(registros, startDate, endDate, selectedUser);
 
   const summary = {};
   filteredData.forEach(({ actividad, etapa, horas }) => {
@@ -33,7 +27,6 @@ function Reportes() {
     summary[actividad][etapa] += parseInt(horas);
   });
 
-
   // Get unique categories
   const etapas = new Set();
   for (const actividad in summary) {
@@ -42,13 +35,11 @@ function Reportes() {
     }
   }
 
-  const uniqueUsers = [...new Set(data.map(item => item.userEmail))];
+  const uniqueUsers = [...new Set(registros.map(item => item.userEmail))];
 
   return (
     <div>
-      {currentUser ? (
         <div>
-        
         <h1>Resumen de horas por actividad</h1>
         <label>
           Fecha de Inicio:
@@ -78,13 +69,7 @@ function Reportes() {
         <SummaryTable summary={summary} etapas={etapas} />
         <footer>© 2024 PAG</footer>
       </div>
-      ) : (
-        <>
-          <Login />
-        </>
-      )}
     </div>
-    
   )
 }
 

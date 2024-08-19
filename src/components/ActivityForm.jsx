@@ -1,12 +1,11 @@
-import './ActivityForm.css'
-
 import React, { useState ,useContext} from 'react';
-import { useData } from '../context/DataContext';
-import Slider from '@mui/material/Slider';
 import { db } from '../firebaseConfig'; // Adjust the path as necessary
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
+//context
+import { useData } from '../context/DataContext';
 import {AuthContext} from '../context/AuthContext'
-import { indexedDBLocalPersistence } from 'firebase/auth';
+//components
+import Slider from '@mui/material/Slider';
 
 const ActivityForm = () => {
   const {actividades} = useData()
