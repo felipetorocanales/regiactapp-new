@@ -10,63 +10,36 @@ import { orderBy, query,collection, getDocs, onSnapshot } from 'firebase/firesto
      const [registros,setRegistros] = useState([])
      const [onActividades, setOnActividades] = useState([])
 
-     const [loading, setLoading] = useState(true); // General loading state
-
-     useEffect(() => {
-       // Fetch your data here
-       const fetchData = async () => {
-        try{
-          setLoading(false); // Start loading
-
-          const registrosCollection = collection(db, 'registros');
-          const actividadesCollection = collection(db, 'actividades');
-          const [registrosSnapshot,actividadesSnapshot] = await Promise.all([
-            getDocs(registrosCollection),
-            getDocs(actividadesCollection),
-          ])
-          const registrosList = await registrosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          const actividadesList = await actividadesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-          setData(registrosList);
-          setActividades(actividadesList);
-        }catch(error){
-          console.log("error fetching data....",error)
-        }finally{
-          setLoading(true); // Stop loading after all fetches
-        }
-      };
-      fetchData();
-     }, []);
-
-     useEffect(() => {
-      const unsubscribe = onSnapshot(collection(db, 'registros'), (snapshot) => {
-        const docs = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setRegistros(docs);
-      });
-  
-      // Cleanup subscription on unmount
-      return () => unsubscribe();
-    }, []);
+     const [loading, setLoading] = useState(false); // General loading state
 
     useEffect(() => {
-      
-      const unsubscribe = onSnapshot(query(collection(db,'actividades'), orderBy("nombre", "asc")), (snapshot) => {
-        const docs = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setOnActividades(docs);
-      });
-  
-      // Cleanup subscription on unmount
-      return () => unsubscribe();
-    }, []);
+        const fetchData = async () => {
+          try{
+            // onSnapshot(collection(db, 'registros'), (snapshot) => {
+            //   const docs = snapshot.docs.map(doc => ({
+            //     id: doc.id,
+            //     ...doc.data()
+            //   }));
+            //   setRegistros(docs);
+            //   setLoading(true);
+            // });
+            onSnapshot(query(collection(db,'actividades'), orderBy("nombre", "asc")), (snapshot) => {
+              const docs = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+              }));
+              setOnActividades(docs);
+              setLoading(true);
+            });
+          }catch(err){
+            console.log("error fetching data....",error)
+          }
+        }
+        fetchData();
+      }, []);
 
      return (
-       <DataContext.Provider value={{ data , actividades,loading,registros,onActividades }}>
+       <DataContext.Provider value={{ loading,registros,onActividades }}>
          {children}
        </DataContext.Provider>
      );

@@ -8,7 +8,7 @@ import {AuthContext} from '../context/AuthContext'
 import Slider from '@mui/material/Slider';
 
 const ActivityForm = () => {
-  const {actividades} = useData()
+  const {onActividades} = useData()
   const { currentUser } = useContext(AuthContext);
   const [categoryOptions, setCategoryOptions] = useState(["General","Planificación","Ejecución","Comunicación"]);
 
@@ -83,7 +83,7 @@ const ActivityForm = () => {
           onChange={(e) => setSelectedActivity(e.target.value)}
         >
           <option value="">Seleccione una actividad</option>
-          {actividades.map((activity) => (
+          {onActividades.map((activity) => (
             <option key={activity.nombre} value={activity.nombre}>
               {activity.nombre}
             </option>

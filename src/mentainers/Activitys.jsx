@@ -112,12 +112,15 @@ const Activitys = () => {
               />
             </td>
             <td>
-              <input
-                type="text"
-                value={editedData[item.id]?.tipo ?? item.tipo}
-                onChange={(e) => handleEdit(item.id, 'tipo', e.target.value)}
-              />
-            </td>
+                <select
+                  value={editedData[item.id]?.tipo ?? item.tipo}
+                  onChange={(e) => handleEdit(item.id, 'tipo', e.target.value)}
+                >
+                  <option value="">Select Tipo</option>
+                  <option value="general">General</option>
+                  <option value="auditoria">Auditoria</option>
+                </select>
+              </td>
             <td>
               <input
                 type="email"
