@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {db} from "../firebaseConfig"
-import { collection, getDocs, onSnapshot } from 'firebase/firestore';
+import { orderBy, query,collection, getDocs, onSnapshot } from 'firebase/firestore';
 
    const DataContext = createContext();
 
@@ -8,6 +8,7 @@ import { collection, getDocs, onSnapshot } from 'firebase/firestore';
      const [data, setData] = useState([]);
      const [actividades, setActividades] = useState([])
      const [registros,setRegistros] = useState([])
+     const [onActividades, setOnActividades] = useState([])
 
      const [loading, setLoading] = useState(true); // General loading state
 
@@ -50,8 +51,22 @@ import { collection, getDocs, onSnapshot } from 'firebase/firestore';
       return () => unsubscribe();
     }, []);
 
+    useEffect(() => {
+      
+      const unsubscribe = onSnapshot(query(collection(db,'actividades'), orderBy("nombre", "asc")), (snapshot) => {
+        const docs = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setOnActividades(docs);
+      });
+  
+      // Cleanup subscription on unmount
+      return () => unsubscribe();
+    }, []);
+
      return (
-       <DataContext.Provider value={{ data , actividades,loading,registros }}>
+       <DataContext.Provider value={{ data , actividades,loading,registros,onActividades }}>
          {children}
        </DataContext.Provider>
      );

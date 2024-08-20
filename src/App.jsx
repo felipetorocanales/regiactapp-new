@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 import Reportes from './Reportes';
 import RegistroDeHoras from './RegistroDeHoras'
+import Configuracion from './Configuracion'
 
 //contextos
 import {useContext } from 'react'
@@ -13,7 +14,6 @@ import Login from './components/Login';
 import NavBar from './components/NavBar'
 
 const Inicio = () => <h2>Inicio</h2>;
-const Configuracion = () => <h2>Configuración</h2>;
 
 function App() {
   
