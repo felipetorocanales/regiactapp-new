@@ -28,6 +28,7 @@ import { orderBy, query,collection, getDocs, onSnapshot } from 'firebase/firesto
               }));
               setOnActividades(docs);
             });
+            setLoading(false)
           }catch(err){
             console.log("error fetching data....",error)
           }
