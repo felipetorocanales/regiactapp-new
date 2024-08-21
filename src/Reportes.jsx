@@ -1,9 +1,11 @@
+import ActividadesSemana from "./reports/ActividadesSemana"
+
 function Reportes() {
   
   
   return (
     <div>
-        Reportes
+        <ActividadesSemana/>
     </div>
   )
 }

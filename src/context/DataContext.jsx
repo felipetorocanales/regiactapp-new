@@ -5,8 +5,6 @@ import { orderBy, query,collection, getDocs, onSnapshot } from 'firebase/firesto
    const DataContext = createContext();
 
    export const DataProvider = ({ children }) => {
-     const [data, setData] = useState([]);
-     const [actividades, setActividades] = useState([])
      const [registros,setRegistros] = useState([])
      const [onActividades, setOnActividades] = useState([])
 
@@ -15,21 +13,20 @@ import { orderBy, query,collection, getDocs, onSnapshot } from 'firebase/firesto
     useEffect(() => {
         const fetchData = async () => {
           try{
-            // onSnapshot(collection(db, 'registros'), (snapshot) => {
-            //   const docs = snapshot.docs.map(doc => ({
-            //     id: doc.id,
-            //     ...doc.data()
-            //   }));
-            //   setRegistros(docs);
-            //   setLoading(true);
-            // });
+            onSnapshot(collection(db, 'registros'), (snapshot) => {
+              const docs = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+              }));
+              setRegistros(docs);
+              setLoading(true);
+            });
             onSnapshot(query(collection(db,'actividades'), orderBy("nombre", "asc")), (snapshot) => {
               const docs = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
               }));
               setOnActividades(docs);
-              setLoading(true);
             });
           }catch(err){
             console.log("error fetching data....",error)
