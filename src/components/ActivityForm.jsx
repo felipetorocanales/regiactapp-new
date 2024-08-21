@@ -10,7 +10,7 @@ import Slider from '@mui/material/Slider';
 const ActivityForm = () => {
   const {onActividades} = useData()
   const { currentUser } = useContext(AuthContext);
-  const [categoryOptions, setCategoryOptions] = useState(["General","Planificación","Ejecución","Comunicación"]);
+  const [categoryOptions, setCategoryOptions] = useState(["General","Planificación","Ejecución","Comunicación","Revisión de calidad QA","Supervisión"]);
 
   const [selectedActivity, setSelectedActivity] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -28,7 +28,7 @@ const ActivityForm = () => {
 
     // Validate the form fields
     if (!date || !selectedActivity || !selectedCategory || !sliderValue) {
-      setError('Please fill in all fields.');
+      setError('Complete todos los campos, por favor.');
       return;
     }
 
@@ -50,7 +50,7 @@ const ActivityForm = () => {
       setSelectedActivity('');
       setSelectedCategory('');
       setSliderValue([9,18])
-      alert('Registro added successfully!');
+      
     } catch (err) {
       console.error('Error adding document: ', err);
       setError('Error adding document, please try again.');
@@ -91,7 +91,7 @@ const ActivityForm = () => {
         </select>
       </div>
       <div className="form-group">
-        <label>Categoría:</label>
+        <label>Etapa:</label>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
