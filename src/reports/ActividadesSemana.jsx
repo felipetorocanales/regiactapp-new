@@ -35,8 +35,9 @@ const ActividadesSemana = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedTipo, setSelectedTipo] = useState("")
   const [selectedArea, setSelectedArea] = useState("")
+  const [selectedUsuario, setSelectedUsuario] = useState("")
+
   const { registros, onActividades,usuarios } = useData();
-  const [usuario, setUsuario] = useState("")
 
   const joinActividades = registros.map((itemB) => {
     // Find the corresponding object in Array A
@@ -72,7 +73,7 @@ const ActividadesSemana = () => {
       new Date(entry.fechaIni).getFullYear() === selectedYear &&
       (selectedTipo ? entry.tipo === selectedTipo : true) &&
       (selectedArea ? entry.area === selectedArea : true) &&
-      (usuario ? entry.userEmail === usuario : true ) &&
+      (selectedUsuario ? entry.userEmail === selectedUsuario : true ) &&
       entry.estado === true
   );
   const aggregatedData = aggregateData(filteredData);
@@ -115,6 +116,16 @@ const ActividadesSemana = () => {
           <option value="mejora">Mejora</option>
           <option value="operativo">Operativo</option>
           <option value="tecnologico">Tecnologico</option>
+        </select>
+      </label>
+      <label>
+        Selecciona Usuario:
+        <select value={selectedUsuario} onChange={(e) => setSelectedUsuario(e.target.value)}>
+          <option value="">Todos</option>
+          {usuarios.map((usuario) => 
+              <option key={usuario.key} value={usuario.key}>{usuario.key}</option>
+            )
+          }
         </select>
       </label>
       <table>

@@ -27,9 +27,7 @@ function App() {
         <Router>
         <div>
         <LogoutButton />
-        
           <NavBar/>
-  
           <Routes>
             <Route path="/" element={<Inicio />} />
             <Route path="/reportes" element={<Reportes />} />
