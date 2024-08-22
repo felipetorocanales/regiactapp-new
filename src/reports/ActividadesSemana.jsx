@@ -18,7 +18,7 @@ const aggregateData = (data) => {
       result[actividad][week] = 0;
     }
 
-    result[actividad][week] += Math.round(parseInt(entry.horas) / 8);
+    result[actividad][week] += parseInt(entry.horas);
   });
 
   return result;
@@ -36,6 +36,7 @@ const ActividadesSemana = () => {
   const [selectedTipo, setSelectedTipo] = useState("")
   const [selectedArea, setSelectedArea] = useState("")
   const { registros, onActividades,usuarios } = useData();
+  const [usuario, setUsuario] = useState("")
 
   const joinActividades = registros.map((itemB) => {
     // Find the corresponding object in Array A
@@ -46,6 +47,7 @@ const ActividadesSemana = () => {
       return {
         ...itemB,
         tipo: matchingItemA.tipo,
+        estado: matchingItemA.estado
       };
     }
     return itemB;
@@ -69,7 +71,9 @@ const ActividadesSemana = () => {
     (entry) =>
       new Date(entry.fechaIni).getFullYear() === selectedYear &&
       (selectedTipo ? entry.tipo === selectedTipo : true) &&
-      (selectedArea ? entry.area === selectedArea : true)
+      (selectedArea ? entry.area === selectedArea : true) &&
+      (usuario ? entry.userEmail === usuario : true ) &&
+      entry.estado === true
   );
   const aggregatedData = aggregateData(filteredData);
   const actividades = Object.keys(aggregatedData);
@@ -134,7 +138,7 @@ const ActividadesSemana = () => {
                 {sortedWeeks.map((week) => (
                   <td key={week}>{aggregatedData[actividad][week] || 0}</td>
                 ))}
-                <td>{total}</td>
+                <td>{Math.round(total/8)}</td>
               </tr>
             );
           })}

@@ -1,18 +1,37 @@
-import { useState,useEffect,useContext } from 'react'
+import { useState,useEffect } from 'react'
 //components
 import SummaryTable from '../components/SummaryTable';
-//hooks
-import useFilteredData from "../hooks/useFilteredData";
 //context
 import { useData } from '../context/DataContext';
 
 const ActividadesEtapas = () => {
-    const {registros} = useData();
+    const {registros,onActividades} = useData();
     const [startDate, setStartDate] = useState("2024-01-01");
     const [endDate, setEndDate] = useState("2024-12-30");
     const [selectedUser, setSelectedUser] = useState("");
 
-    const filteredData = useFilteredData(registros, startDate, endDate, selectedUser);
+    const joinActividades = registros.map((itemB) => {
+        // Find the corresponding object in Array A
+        const matchingItemA = onActividades.find(
+          (itemA) => itemA.nombre === itemB.actividad
+        );
+        if (matchingItemA) {
+          return {
+            ...itemB,
+            tipo: matchingItemA.tipo,
+            estado: matchingItemA.estado
+          };
+        }
+        return itemB;
+      });
+
+    const filteredData = joinActividades.filter(
+        (item) => 
+            item.fechaIni.split("T")[0] >= startDate.split("T")[0] &&
+            item.fechaIni.split("T")[0] <= endDate.split("T")[0] &&
+            (selectedUser ? item.userEmail === selectedUser : true) &&
+            item.estado === true
+    )
 
     const summary = {};
     filteredData.forEach(({ actividad, etapa, horas }) => {

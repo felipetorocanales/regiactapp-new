@@ -1,37 +1,47 @@
-import React, { useState ,useContext} from 'react';
-import { db } from '../firebaseConfig'; // Adjust the path as necessary
-import { collection, addDoc } from 'firebase/firestore';
+import React, { useState, useContext } from "react";
+import { db } from "../firebaseConfig"; // Adjust the path as necessary
+import { collection, addDoc } from "firebase/firestore";
 //context
-import { useData } from '../context/DataContext';
-import {AuthContext} from '../context/AuthContext'
+import { useData } from "../context/DataContext";
+import { AuthContext } from "../context/AuthContext";
 
 const ActivityForm = () => {
-  const {onActividades} = useData()
+  const { onActividades } = useData();
+  const filteredActivity = onActividades.filter(
+    (entry) => entry.estado === true
+  );
   const { currentUser } = useContext(AuthContext);
-  const [categoryOptions, setCategoryOptions] = useState(["General","Planificación","Ejecución","Comunicación","Revisión de calidad QA","Supervisión"]);
-  const [selectedActivity, setSelectedActivity] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [date, setDate] = useState('');
-  const [hours, setHours] = useState("8")
-  const [error, setError] = useState('');
+  const [categoryOptions, setCategoryOptions] = useState([
+    "General",
+    "Planificación",
+    "Ejecución",
+    "Comunicación",
+    "Revisión de calidad QA",
+    "Supervisión",
+  ]);
+  const [selectedActivity, setSelectedActivity] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [date, setDate] = useState("");
+  const [hours, setHours] = useState("8");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const fechaIni = `${date}T09:00`
-    const fechaFin = hours === "4" ? `${date}T13:00` : `${date}T18:00`
+    const fechaIni = `${date}T09:00`;
+    const fechaFin = hours === "4" ? `${date}T13:00` : `${date}T18:00`;
     // Handle form submission logic here
-    setError('');
+    setError("");
 
     // Validate the form fields
     if (!date || !selectedActivity || !selectedCategory) {
-      setError('Complete todos los campos, por favor.');
+      setError("Complete todos los campos, por favor.");
       return;
     }
 
     try {
       // Add a new document with a generated ID
-      await addDoc(collection(db, 'registros'), {
+      await addDoc(collection(db, "registros"), {
         fechaIni,
         fechaFin,
         horas: hours,
@@ -43,17 +53,16 @@ const ActivityForm = () => {
       });
 
       // Clear the form after submission
-      setDate('');
-      setSelectedActivity('');
-      setSelectedCategory('');
-      setHours("8")
-      
+      setDate("");
+      setSelectedActivity("");
+      setSelectedCategory("");
+      setHours("8");
     } catch (err) {
-      console.error('Error adding document: ', err);
-      setError('Error adding document, please try again.');
+      console.error("Error adding document: ", err);
+      setError("Error adding document, please try again.");
     }
   };
-  
+
   return (
     <form onSubmit={handleSubmit} className="form-container">
       <div>
@@ -72,7 +81,7 @@ const ActivityForm = () => {
           onChange={(e) => setSelectedActivity(e.target.value)}
         >
           <option value="">Seleccione una actividad</option>
-          {onActividades.map((activity) => (
+          {filteredActivity.map((activity) => (
             <option key={activity.nombre} value={activity.nombre}>
               {activity.nombre}
             </option>
@@ -114,8 +123,10 @@ const ActivityForm = () => {
           8 horas
         </label>
       </div>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <button type="submit" className="submit-button">Enviar</button>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <button type="submit" className="submit-button">
+        Enviar
+      </button>
     </form>
   );
 };
