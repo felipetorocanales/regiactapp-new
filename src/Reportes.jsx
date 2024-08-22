@@ -1,13 +1,13 @@
-import ActividadesSemana from "./reports/ActividadesSemana"
+import ActividadesSemana from "./reports/ActividadesSemana";
+import PivotTable from "./reports/PivotTable";
 
 function Reportes() {
-  
-  
   return (
     <div>
-        <ActividadesSemana/>
+      <ActividadesSemana />
+      <PivotTable />
     </div>
-  )
+  );
 }
 
-export default Reportes
+export default Reportes;

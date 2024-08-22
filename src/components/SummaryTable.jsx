@@ -1,5 +1,7 @@
 import React from 'react';
 
+const etapasNombre = ["General","Planificación","Ejecución","Comunicación","Revisión de calidad QA","Supervisión"]
+
 const SummaryTable = ({ summary, etapas }) => {
   return (
     <table border="1">
@@ -7,7 +9,7 @@ const SummaryTable = ({ summary, etapas }) => {
         <tr>
           <th>Actividad</th>
           {[...etapas].map((etapa) => (
-            <th key={etapa}>{etapa}</th>
+            <th key={etapa}>{etapasNombre[etapa]}</th>
           ))}
         </tr>
       </thead>

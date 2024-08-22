@@ -7,8 +7,15 @@ import {useData} from '../context/DataContext'
 
 const Activitys = () => {
   const {onActividades} = useData();
+
   const [editedData, setEditedData] = useState({});
   const [changedRows, setChangedRows] = useState(new Set());
+  
+  const [searchText, setSearchText] = useState('');
+
+  const filteredData = onActividades.filter(item =>
+    item.nombre.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   const handleEdit = (id, field, value) => {
     setEditedData(prev => ({
@@ -68,6 +75,13 @@ const Activitys = () => {
   return (
     <>
     <button onClick={handleAddNewActivity}>Agregar nueva actividad</button>
+    <input
+        type="text"
+        placeholder="Buscar..."
+        value={searchText}
+        onChange={e => setSearchText(e.target.value)}
+        style={{ marginBottom: '10px', padding: '8px', width: '300px' }}
+      />
     <table>
       <thead>
         <tr>
@@ -81,7 +95,7 @@ const Activitys = () => {
         </tr>
       </thead>
       <tbody>
-        {onActividades.map(item => (
+        {filteredData.map(item => (
           <tr key={item.id} style={{ backgroundColor: changedRows.has(item.id) ? 'red' : 'white' }}>
             <td>
               <input
@@ -130,9 +144,9 @@ const Activitys = () => {
             </td>
             <td>
               <button onClick={() => handleSave(item.id)}>Save</button>
-              <button onClick={() => handleDelete(item.id)} style={{ marginLeft: '10px', color: 'red' }}>
+              {/* <button onClick={() => handleDelete(item.id)} style={{ marginLeft: '10px', color: 'red' }}>
                 Delete
-              </button>
+              </button> */}
             </td>
           </tr>
         ))}
