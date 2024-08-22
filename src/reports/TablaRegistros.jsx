@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState ,useContext} from 'react';
 import {useData} from '../context/DataContext'
+import {AuthContext} from '../context/AuthContext'
+import { db } from '../firebaseConfig';
+import {collection,addDoc, deleteDoc, updateDoc, doc } from 'firebase/firestore';
+
 
 const TablaRegistros = () => {
+    const { currentUser } = useContext(AuthContext);
     const {registros} = useData();
     const [searchTerm, setSearchTerm] = useState('');
     const [sortField, setSortField] = useState('id');
@@ -20,7 +25,7 @@ const TablaRegistros = () => {
 
     const filteredData = registros.filter(item =>
         Object.values(item).some(value =>
-            String(value).toLowerCase().includes(searchTerm.toLowerCase())
+            String(value).toLowerCase().includes(searchTerm.toLowerCase()) && item.userEmail === currentUser.email
         )
     );
 
@@ -29,6 +34,18 @@ const TablaRegistros = () => {
         if (a[sortField] > b[sortField]) return 1;
         return 0;
     });
+
+    const formatDate = (timestamp) => {
+        if (timestamp && timestamp.seconds) {
+            return new Date(timestamp.seconds * 1000).toLocaleDateString();
+        }
+        return '';
+    };
+
+    const handleDelete = async (id) => {
+        const docRef = doc(db, 'registros', id);
+        await deleteDoc(docRef);
+      };
 
     // Calculate the current records to display
     const indexOfLastRecord = currentPage * recordsPerPage;
@@ -61,24 +78,32 @@ const TablaRegistros = () => {
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Creado</th>
                         <th>Actividad</th>
                         <th>Etapa</th>
                         <th>Fecha Inicio</th>
                         <th>Fecha Fin</th>
                         <th>Horas</th>
                         <th>Email Usuario</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {currentRecords.map(item => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
+                            <td>{formatDate(item.creado)}</td>
                             <td>{item.actividad}</td>
                             <td>{item.etapa}</td>
                             <td>{item.fechaIni}</td>
                             <td>{item.fechaFin}</td>
                             <td>{item.horas}</td>
                             <td>{item.userEmail}</td>
+                            <td>
+                            <button onClick={() => handleDelete(item.id)} style={{ marginLeft: '10px', color: 'red' }}>
+                                Eliminar
+                            </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

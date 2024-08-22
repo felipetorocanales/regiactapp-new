@@ -13,6 +13,7 @@ const DataContext = createContext();
 export const DataProvider = ({ children }) => {
   const [registros, setRegistros] = useState([]);
   const [onActividades, setOnActividades] = useState([]);
+  const [usuarios, setUsuarios] = useState([])
 
   const [loading, setLoading] = useState(false); // General loading state
 
@@ -37,6 +38,13 @@ export const DataProvider = ({ children }) => {
             setOnActividades(docs);
           }
         );
+        onSnapshot(collection(db, "usuarios"), (snapshot) => {
+          const docs = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setUsuarios(docs);
+        });
       } catch (err) {
         console.log("error fetching data....", error);
       }
@@ -45,7 +53,7 @@ export const DataProvider = ({ children }) => {
   }, []);
 
   return (
-    <DataContext.Provider value={{ loading, registros, onActividades }}>
+    <DataContext.Provider value={{ loading, registros, onActividades,usuarios }}>
       {children}
     </DataContext.Provider>
   );

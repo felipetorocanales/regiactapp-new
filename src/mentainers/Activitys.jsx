@@ -90,8 +90,8 @@ const Activitys = () => {
           <th>Días - Operativo</th>
           <th>Nombre</th>
           <th>Tipo</th>
-          <th>User Email</th>
-          <th>Actions</th>
+          <th>Usuario</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -143,7 +143,7 @@ const Activitys = () => {
               />
             </td>
             <td>
-              <button onClick={() => handleSave(item.id)}>Save</button>
+              <button onClick={() => handleSave(item.id)}>Guardar</button>
               {/* <button onClick={() => handleDelete(item.id)} style={{ marginLeft: '10px', color: 'red' }}>
                 Delete
               </button> */}
