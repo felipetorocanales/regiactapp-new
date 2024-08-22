@@ -1,4 +1,3 @@
-import "./ActividadesSemana.css";
 import { useState } from "react";
 import { useData } from "../context/DataContext";
 
@@ -90,6 +89,13 @@ const ActividadesSemana = () => {
     setSelectedYear(Number(event.target.value));
   };
 
+  const weekTotals = sortedWeeks.reduce((totals, week) => {
+    totals[week] = actividades.reduce((sum, actividad) => {
+      return sum + (aggregatedData[actividad][week] || 0);
+    }, 0);
+    return totals;
+  }, {});
+
   return (
     <>
       <h1>Sumatoria de Días por Actividad por Semana</h1>
@@ -133,9 +139,9 @@ const ActividadesSemana = () => {
           <tr>
             <th>Actividad</th>
             {sortedWeeks.map((week) => (
-              <th key={week}>{week}</th>
+              <th key={week}>S{week}</th>
             ))}
-            <th>Total</th>
+            <th><strong>Total por Actividad</strong></th>
           </tr>
         </thead>
         <tbody>
@@ -149,11 +155,20 @@ const ActividadesSemana = () => {
                 {sortedWeeks.map((week) => (
                   <td key={week}>{aggregatedData[actividad][week] || 0}</td>
                 ))}
-                <td>{Math.round(total/8)}</td>
+                <td><strong>{Math.round(total/8)}</strong></td>
               </tr>
             );
           })}
         </tbody>
+        <tfoot>
+          <tr>
+            <td><strong>Total por Semana</strong></td>
+            {sortedWeeks.map((week) => (
+              <td key={week}><strong>{weekTotals[week] || 0}</strong></td>
+            ))}
+            <td><strong>{Math.round(Object.values(weekTotals).reduce((sum, total) => sum + total, 0) / 8)}</strong></td>
+          </tr>
+        </tfoot>
       </table>
     </>
   );
