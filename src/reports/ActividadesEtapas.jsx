@@ -1,6 +1,4 @@
-import { useState,useEffect } from 'react'
-//components
-import SummaryTable from '../components/SummaryTable';
+import { useState } from 'react'
 //context
 import { useData } from '../context/DataContext';
 
@@ -9,6 +7,8 @@ const ActividadesEtapas = () => {
     const [startDate, setStartDate] = useState("2024-01-01");
     const [endDate, setEndDate] = useState("2024-12-30");
     const [selectedUser, setSelectedUser] = useState("");
+    const etapasNombre = ["General","Planificación","Ejecución","Comunicación","Revisión de calidad QA","Supervisión"]
+
 
     const joinActividades = registros.map((itemB) => {
         // Find the corresponding object in Array A
@@ -83,7 +83,28 @@ const ActividadesEtapas = () => {
                 ))}
             </select>
             </label>
-            <SummaryTable summary={summary} etapas={etapas} />
+            <table border="1">
+                <thead>
+                    <tr>
+                    <th>Actividad</th>
+                    {[...etapas].map((etapa) => (
+                        <th key={etapa}>{etapasNombre[etapa]}</th>
+                    ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {Object.keys(summary).map((actividad) => (
+                    <tr key={actividad}>
+                        <td>{actividad}</td>
+                        {[...etapas].map((etapa) => (
+                        <td key={etapa}>
+                            {summary[actividad][etapa] || 0}
+                        </td>
+                        ))}
+                    </tr>
+                    ))}
+                </tbody>
+                </table>
             <footer>© 2024 PAG</footer>
         </div>
         </div>
