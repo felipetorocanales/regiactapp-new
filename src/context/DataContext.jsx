@@ -37,7 +37,6 @@ export const DataProvider = ({ children }) => {
             setOnActividades(docs);
           }
         );
-        setLoading(false);
       } catch (err) {
         console.log("error fetching data....", error);
       }
