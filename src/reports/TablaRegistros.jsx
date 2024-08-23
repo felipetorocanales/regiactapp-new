@@ -14,7 +14,7 @@ const TablaRegistros = () => {
   const { currentUser } = useContext(AuthContext);
   const { registros } = useData();
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortField, setSortField] = useState("id");
+  const [sortField, setSortField] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 20;
 
@@ -67,32 +67,34 @@ const TablaRegistros = () => {
 
   return (
     <div className="container mt-5">
-      <div className="mb-4">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Busqueda..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-      </div>
-      <div className="mb-4">
-        <label>Ordernar por:</label>
-        <select
-          className="form-select"
-          value={sortField}
-          onChange={handleSortChange}
-        >
-          <option value="id">ID</option>
-          <option value="actividad">Actividad</option>
-          <option value="etapa">Etapa</option>
-          <option value="fechaIni">Fecha Inicio</option>
-          <option value="fechaFin">Fecha Fin</option>
-          <option value="horas">Horas</option>
-          <option value="creado">Creado</option>
-          <option value="modificado">Modificado</option>
-          <option value="userEmail">Email Usuario</option>
-        </select>
+      <div className="row mb-3">
+        <div className="col-4">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Busqueda..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        </div>
+        <div className="col-4">
+          <select
+            className="form-select"
+            value={sortField}
+            onChange={handleSortChange}
+          >
+            <option value="">Ordernar por...</option>
+            <option value="id">ID</option>
+            <option value="actividad">Actividad</option>
+            <option value="etapa">Etapa</option>
+            <option value="fechaIni">Fecha Inicio</option>
+            <option value="fechaFin">Fecha Fin</option>
+            <option value="horas">Horas</option>
+            <option value="creado">Creado</option>
+            <option value="modificado">Modificado</option>
+            <option value="userEmail">Email Usuario</option>
+          </select>
+        </div>
       </div>
 
       <div className="table-responsive" style={{ maxHeight: "400px" }}>

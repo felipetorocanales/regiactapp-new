@@ -3,6 +3,7 @@ import ActivityForm from "./components/ActivityForm";
 import ActividadesEtapas from "./reports/ActividadesEtapas";
 import ActividadesSemana from "./reports/ActividadesSemana";
 import TablaRegistros from "./reports/TablaRegistros";
+import ActividadesPlanificacion from "./reports/ActividadesPlanificacion";
 
 function Inicio() {
   const [selectedReport, setSelectedReport] = useState("home");
@@ -52,6 +53,17 @@ function Inicio() {
             >
               Todos los registros ingresados
             </a>
+            <a
+              className={`nav-item nav-link ${
+                selectedReport === "report4" ? "active" : ""
+              }`}
+              onClick={() => handleTabClick("report4")}
+              role="tab"
+              aria-controls="nav-report4"
+              aria-selected={selectedReport === "report4"}
+            >
+              Planificacion
+            </a>
           </div>
         </nav>
         <div className="tab-content" id="nav-tabContent">
@@ -84,6 +96,16 @@ function Inicio() {
             aria-labelledby="nav-contact-tab"
           >
             <TablaRegistros />
+          </div>
+          <div
+            className={`tab-pane fade ${
+              selectedReport === "report4" ? "show active" : ""
+            }`}
+            id="nav-report4"
+            role="tabpanel"
+            aria-labelledby="nav-report4-tab"
+          >
+            <ActividadesPlanificacion />
           </div>
         </div>
       </div>
