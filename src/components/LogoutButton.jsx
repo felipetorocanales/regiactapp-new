@@ -14,12 +14,9 @@ const LogoutButton = () => {
   };
 
   return (
-    <>
-    <button onClick={handleLogout} style={{ padding: '10px 20px', backgroundColor: '#f44336', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-      Logout
+    <button className="btn btn-warning" onClick={handleLogout}>
+      Cerrar sesión
     </button>
-    <span></span>
-    </>
   );
 };
 
