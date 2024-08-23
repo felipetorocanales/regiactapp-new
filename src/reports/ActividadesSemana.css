@@ -1,0 +1,7 @@
+.small-text {
+  font-size: 0.6rem; /* Adjust the font size as needed */
+}
+
+.table-responsive {
+  overflow-y: auto; /* Enable vertical scrolling */
+}
